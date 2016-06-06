@@ -1,0 +1,5 @@
+*.pyc
+*.sqlite
+*.tar
+Report/*
+XML_DATA/*
