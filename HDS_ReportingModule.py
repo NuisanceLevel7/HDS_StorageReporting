@@ -2,6 +2,8 @@
 
 import re,os,time,datetime,subprocess,sys
 import os.path
+from shutil import copyfile
+
 
 
 
@@ -115,6 +117,11 @@ class ReportGen:
     self.LunColumnHeader = 'LUN ID,Consumed (GB),Capacity GB,Label,Host,Pool ID,Array SN'
     self.PoolList = list()
     self.LunList = list()
+    f = Files()
+    f.dir = 'Report'
+    f.mkdir()    
+    f.copy_file('logo_datalink.png', 'Report/logo_datalink.png')
+
 
   def GetArrayList(self,cur):
 
@@ -235,6 +242,14 @@ class Files:
       # Set the file_exists flag in case caller cares.
       self.file_exists = 0
 
+  def copy_file(self,src, dest):
+    try:
+      copyfile(src, dest)
+    except IOError:
+      print "Failed file copy ", src,dest
+      sys.exit(2)
+
+    
   def stat_file(self,fname):
     blocksize = 4096
     hash_sha = hashlib.sha256()

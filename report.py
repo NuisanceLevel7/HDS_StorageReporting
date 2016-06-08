@@ -2,19 +2,19 @@
 #
 #
 import sqlite3
+import operator
 import time,sys
+from shutil import copyfile
 from HDS_ReportingModule import Files
 from HDS_ReportingModule import SQLTools
 from HDS_ReportingModule import ReportGen
 from HDS_ReportingModule import HTML5
+from HDS_ReportingModule import DateString
 
 
-www = HTML5()
-www.style_sheet()
+customer = raw_input('Enter Customer Name: ')
 
-f = Files()
-f.dir = 'Report'
-f.mkdir()
+t = DateString()
 
 conn = sqlite3.connect('HDS_Report.sqlite')
 cur = conn.cursor()
@@ -22,23 +22,32 @@ cur = conn.cursor()
 rpt = ReportGen()
 rpt.GetArrayList(cur) 
 
+
+www = HTML5()
+www.style_sheet()
+
+f = Files()
+#f.dir = 'Report'
+#f.mkdir()
+
+
 htmlfile = 'Report/Report.html'
 htmllist = list()
 html = www.start_html('Storage Report','left')
 htmllist.append(html)
 
 content = '<table align=center><tr><td><img src="logo_datalink.png">'
-content += '</td><td>Datalink Storage Report</td></tr></table>'
+content += '</td><td>Datalink Storage Report (HDS)<br>for ' + customer + '<br>Report Date: ' + t.today + '</td></tr></table>'
 htmllist.append(www.header(content))
 
 links = list()
 content = '<div class="nav_content">\n'
 
-for array in rpt.ArrayList:
+for array in rpt.ArrayList.keys():
   links.append(['<a href="#' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a>'])
 
 content += www.start_table('left',0,"Navigation")
-for l in links:
+for l in sorted(links):
   content += www.tr_list(l)
 content += www.end_table  
 content += '</div>\n' 
@@ -52,8 +61,12 @@ htmllist.append('<div id="section">\n')
 htmllist.append('<div id="section_content">\n')
 
 
+# sorting the SN to Name dict() by value to display in sorted order...
+sorted_arrays = sorted(rpt.Array2Name.items(), key=operator.itemgetter(1))
 
-for array in rpt.ArrayList:
+
+for sorted_array in sorted_arrays:
+  array = sorted_array[0]
   htmllist.append('<p class="small">\n')
 
   htmllist.append('<a name="' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a><br>\n')
