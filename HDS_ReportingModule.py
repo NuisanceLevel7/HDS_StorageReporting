@@ -76,23 +76,10 @@ class SQLTools:
 
     ''')
 
-    # insert into Array2Names (name,ArraySerialNum) 
-    #   VALUES ('SAN10',85014905),
-    #         ('SAN11',87040225),
-    #         ('SAN12',87041510),
-    #         ('SAN13',87042211),
-    #         ('SAN16',211117),
-    #         ('SAN17',212973),
-    #         ('SAN15',91214891),
-    #         ('SAN14',93050015),
-    #         ('SAN18',450098),
-    #         ('SAN19',450132)
-    #         ;
-
-
+  
     f = Files()
     f.read_file('array_names.conf')
-    for line in f.readfile:
+    for line in f.data:
       if not line.startswith('#'):
         line = line.strip()
         fields = line.split()
@@ -238,7 +225,7 @@ class Files:
     f.close()
 
   def read_file(self,filename):
-    self.readfile = []
+    self.data = []
     self.file_exists = 1
     # Testing if file exists.
     if os.path.isfile(filename):
