@@ -2,11 +2,8 @@
 
 import re,os,time,datetime,subprocess,sys
 import os.path
+import platform
 from shutil import copyfile
-
-
-
-
 
 
 class DateString:
@@ -16,10 +13,6 @@ class DateString:
     self.today = str(datetime.date.fromtimestamp(time.time()).strftime("%Y-%m-%d"))
     self.tomorrow = str(datetime.date.fromtimestamp(time.time() + (60*60*24) ).strftime("%Y-%m-%d"))
     self.now = str(time.strftime('%X %x %Z'))
-
-
-
-
 
 
 class SQLTools:
@@ -80,19 +73,36 @@ class SQLTools:
       Host TEXT
     );
 
-    insert into Array2Names (name,ArraySerialNum) 
-      VALUES ('SAN10',85014905),
-            ('SAN11',87040225),
-            ('SAN12',87041510),
-            ('SAN13',87042211),
-            ('SAN16',211117),
-            ('SAN17',212973),
-            ('SAN15',91214891),
-            ('SAN14',93050015),
-            ('SAN18',450098),
-            ('SAN19',450132)
-            ;
+
     ''')
+
+    # insert into Array2Names (name,ArraySerialNum) 
+    #   VALUES ('SAN10',85014905),
+    #         ('SAN11',87040225),
+    #         ('SAN12',87041510),
+    #         ('SAN13',87042211),
+    #         ('SAN16',211117),
+    #         ('SAN17',212973),
+    #         ('SAN15',91214891),
+    #         ('SAN14',93050015),
+    #         ('SAN18',450098),
+    #         ('SAN19',450132)
+    #         ;
+
+
+    f = Files()
+    f.read_file('array_names.conf')
+    for line in f.readfile:
+      if not line.startswith('#'):
+        line = line.strip()
+        fields = line.split()
+        if len(fields) == 2:
+          name = str(fields[0])
+          sn = str(fields[1])
+          cur.execute(
+          '''INSERT INTO Array2Names (name,ArraySerialNum) 
+             VALUES ( ?,?)''', 
+          (name, sn ) ) 
 
 
 # Add to the module...
@@ -204,7 +214,10 @@ class Files:
 
   def mkdir(self):
     if not os.path.isdir(self.dir):
-      subprocess.call(["mkdir", self.dir])
+      if 'Win' in platform.system():
+        subprocess.call(["md", self.dir], shell=True)
+      else:
+        subprocess.call(["mkdir", self.dir])
 
   def write_file(self,filename,list):
     f = open(filename,'w')
