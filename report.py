@@ -11,6 +11,7 @@ from HDS_ReportingModule import ReportGen
 from HDS_ReportingModule import HTML5
 from HDS_ReportingModule import DateString
 
+# Use meter to show usage
 
 customer = raw_input('Enter Customer Name: ')
 
@@ -27,8 +28,7 @@ www = HTML5()
 www.style_sheet()
 
 f = Files()
-#f.dir = 'Report'
-#f.mkdir()
+
 
 
 htmlfile = 'Report/Report.html'
@@ -47,7 +47,7 @@ for array in rpt.ArrayList.keys():
   links.append(['<a href="#' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a>'])
 
 content += www.start_table('left',0,"Navigation")
-for l in sorted(links):
+for l in sorted(links, reverse=True):
   content += www.tr_list(l)
 content += www.end_table  
 content += '</div>\n' 
@@ -62,7 +62,7 @@ htmllist.append('<div id="section_content">\n')
 
 
 # sorting the SN to Name dict() by value to display in sorted order...
-sorted_arrays = sorted(rpt.Array2Name.items(), key=operator.itemgetter(1))
+sorted_arrays = sorted(rpt.Array2Name.items(), key=operator.itemgetter(1), reverse=True)
 
 
 for sorted_array in sorted_arrays:
@@ -70,7 +70,7 @@ for sorted_array in sorted_arrays:
   htmllist.append('<p class="small">\n')
 
   htmllist.append('<a name="' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a><br>\n')
-  htmllist.append('<a href="' + rpt.Array2Name[array] + '.csv">( Open CSV File )</a><br>') 
+  htmllist.append('<a href="CSV/' + rpt.Array2Name[array] + '.csv">( Open CSV File )</a><br>') 
   htmllist.append('</p>\n')
   htmllist.append(www.start_table('left',1))
   htmllist.append(www.th_list(rpt.ArrayColumnHeader.split(',')))
@@ -80,7 +80,7 @@ for sorted_array in sorted_arrays:
   
 
   # Define CSV file and list for this array
-  csvfile = 'Report/' + rpt.Array2Name[array] + '.csv'
+  csvfile = 'Report/CSV/' + rpt.Array2Name[array] + '.csv'
   csvlist = list()
   
   # Go ahead and collect pool and lun data for the report
@@ -100,6 +100,10 @@ for sorted_array in sorted_arrays:
   htmllist.append(www.th_list(rpt.PoolColumnHeader.split(',')))
   for pool in rpt.PoolList:
     pool_csv =  ",".join(pool)
+    usage = pool[4]
+    subscription = pool[7]
+    pool[4] = '<meter min="0"  max="100"  value="' + usage + '">' + usage + '</meter> ' + usage + '%' 
+    pool[7] = '<meter min="0"  max="100"  value="' + subscription + '">' + subscription + '</meter> ' + subscription + '%' 
     htmllist.append(www.tr_list(pool))
     csvlist.append( pool_csv)
   csvlist.append( "\n")

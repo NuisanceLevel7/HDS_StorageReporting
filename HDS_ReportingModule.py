@@ -117,6 +117,10 @@ class ReportGen:
     f = Files()
     f.dir = 'Report'
     f.mkdir()    
+    f.dir = 'Report/CSV'
+    f.mkdir() 
+    f.dir = 'Report/css'
+    f.mkdir()                   
     f.copy_file('logo_datalink.png', 'Report/logo_datalink.png')
 
 
@@ -274,11 +278,12 @@ class HTML5:
     self.end_table = '\n</table>\n'
     self.end_html = '  </body>\n</html>\n'
     self.http_header = 'Content Type: text/html\n\n'
-
+    
     
 
 
-  def style_sheet(self):
+  def style_sheet(self,cssfile='reportstyle.css'):
+
     stylesheet = '''
 <style>
 #header {
@@ -290,14 +295,14 @@ class HTML5:
 #nav {
     line-height:30px;
     height:400px;
-    width:10%;
+    width:15%;
     float:left;
     padding:5px;
     overflow:auto;
     background-color:#eeeeee;    
 }
 #section {
-    width:85%;
+    width:80%;
     float:left;
     padding:10px;
 }
@@ -329,7 +334,7 @@ p.big
     line-height: 60px;
 }
 </style>'''
-    f = open('Report/Report.css','w')
+    f = open('Report/css/' + cssfile,'w')
     f.write(stylesheet)
     f.close()
    
@@ -356,7 +361,7 @@ p.big
     html =   '<!DOCTYPE html>\n'
     html +=  '  <head><title>' + title + '</title>\n'
     html +=  '  <meta charset="UTF-8">\n'
-    html +=  '  <link href="Report.css" rel="stylesheet" />\n'
+    html +=  '  <link href="css/reportstyle.css" rel="stylesheet" />\n'
     html +=  '  </head>\n'
     html +=  '  <body align="' + align + '">\n'
     return  html

@@ -29,7 +29,7 @@ def loadArrays():
   for array in arrays:
     for node in array.getiterator():
       serialNum =  node.attrib['serialNumber']    
-      name = node.attrib['name']
+      name = node.attrib['name'].upper()
       description = node.attrib['description']
       lastRefresh = node.attrib['lastRefreshed']
 
