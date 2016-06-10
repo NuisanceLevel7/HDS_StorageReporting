@@ -114,13 +114,21 @@ class ReportGen:
     self.LunColumnHeader = 'LUN ID,Consumed (GB),Capacity GB,Label,Host,Pool ID,Array SN'
     self.PoolList = list()
     self.LunList = list()
+    # Make a few directories for things...
+    # set the directory delimiter...
+    delim = '/'
+    if 'Win' in platform.system():
+      delim = '\\'
+    #
     f = Files()
     f.dir = 'Report'
     f.mkdir()    
-    f.dir = 'Report/CSV'
+    f.dir = 'Report' + delim + 'CSV'
     f.mkdir() 
-    f.dir = 'Report/css'
-    f.mkdir()                   
+    f.dir = 'Report' + delim + 'css'
+    f.mkdir() 
+    f.dir = 'Report' + delim + 'html'
+    f.mkdir()                                         
     f.copy_file('logo_datalink.png', 'Report/logo_datalink.png')
 
 
@@ -320,7 +328,7 @@ class HTML5:
 }
 #section_content
 {
-  height:600px;
+  height:655px;
   overflow:auto;
   background:#fff;
   padding:10px;

@@ -37,40 +37,53 @@ html = www.start_html('Storage Report','left')
 htmllist.append(html)
 
 content = '<table align=center><tr><td><img src="logo_datalink.png">'
-content += '</td><td>Datalink Storage Report (HDS)<br>for ' + customer + '<br>Report Date: ' + t.today + '</td></tr></table>'
+content += '</td><td>Datalink Storage Report (HDS)<br>for ' + customer + '<br>Report Date: ' + t.today + '</td></tr></table>\n'
 htmllist.append(www.header(content))
 
-links = list()
 content = '<div class="nav_content">\n'
-
+links = list()
+array_pages = list()
 for array in rpt.ArrayList.keys():
-  links.append(['<a href="#' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a>'])
-
+  links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame">' + rpt.Array2Name[array] + '</a>'])
+  array_pages.append( rpt.Array2Name[array] + '.html')
 content += www.start_table('left',0,"Navigation")
 for l in sorted(links, reverse=True):
   content += www.tr_list(l)
 content += www.end_table  
 content += '</div>\n' 
 
-
+sorted_pages = sorted(array_pages, reverse=True)
 
 htmllist.append(www.nav(content))
 
 
 htmllist.append('<div id="section">\n')
 htmllist.append('<div id="section_content">\n')
+frame = '<iframe src="html/' + sorted_pages[0] + '" name="array_frame" width="95%"'
+frame += ' height="600">No Frame Support. Use another browser...</iframe>'
+htmllist.append(frame)
+html = www.end_html
+htmllist.append(html)
 
-
+f.write_file(htmlfile,htmllist)
 # sorting the SN to Name dict() by value to display in sorted order...
 sorted_arrays = sorted(rpt.Array2Name.items(), key=operator.itemgetter(1), reverse=True)
 
 
 for sorted_array in sorted_arrays:
+
   array = sorted_array[0]
+
+  htmlfile = 'Report/html/' + rpt.Array2Name[array] + '.html'
+  htmllist = list()
+  html = www.start_html('Storage Report','left')
+  htmllist.append(html)
+
+
   htmllist.append('<p class="small">\n')
 
   htmllist.append('<a name="' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a><br>\n')
-  htmllist.append('<a href="CSV/' + rpt.Array2Name[array] + '.csv">( Open CSV File )</a><br>') 
+  htmllist.append('<a href="../CSV/' + rpt.Array2Name[array] + '.csv">( Open CSV File )</a><br>') 
   htmllist.append('</p>\n')
   htmllist.append(www.start_table('left',1))
   htmllist.append(www.th_list(rpt.ArrayColumnHeader.split(',')))
@@ -120,15 +133,14 @@ for sorted_array in sorted_arrays:
     csvlist.append( lun_csv  )  
   csvlist.append( "\n")
   htmllist.append(www.end_table)
-  htmllist.append('<p class="big">\n_______________________________________________________</p>')
+  #htmllist.append('<p class="big">\n_______________________________________________________</p>')
   f.write_file(csvfile,csvlist)
 
-htmllist.append('<div id="section">\n')
-htmllist.append('<div id="section">\n')
-html = www.end_html
-htmllist.append(html)
 
-f.write_file(htmlfile,htmllist)
+  html = www.end_html
+  htmllist.append(html)
+
+  f.write_file(htmlfile,htmllist)
 sys.exit()
 
 
