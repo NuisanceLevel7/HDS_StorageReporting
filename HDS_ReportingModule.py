@@ -110,7 +110,7 @@ class ReportGen:
     self.ArrayList = dict()
     self.ArrayData = dict()
     self.ArrayColumnHeader = 'Name,Ser#,HCS Name,Description,Last Refreshed'
-    self.PoolColumnHeader = 'Pool ID,Name,Capacity GB,Free GB, UsageRate,V-Vols, Subscribed GB, Subscription%'
+    self.PoolColumnHeader = 'Pool ID,Name,Capacity GB,Free GB, UsageRate,V-Vols, Subscribed GB,Unsubscribed (GB),Subscription%'
     self.LunColumnHeader = 'LUN ID,Consumed (GB),Capacity GB,Label,Host,Pool ID,Array SN'
     self.PoolList = list()
     self.LunList = list()
@@ -286,13 +286,7 @@ class HTML5:
     self.end_table = '\n</table>\n'
     self.end_html = '  </body>\n</html>\n'
     self.http_header = 'Content Type: text/html\n\n'
-    
-    
-
-
-  def style_sheet(self,cssfile='reportstyle.css'):
-
-    stylesheet = '''
+    self.stylesheet = '''
 <style>
 #header {
     background-color:black;
@@ -341,9 +335,26 @@ p.big
 {
     line-height: 60px;
 }
-</style>'''
+td {
+  text-align: right;
+}
+th {
+  text-align: center;
+}
+h1 {
+  color: blue;
+}
+
+</style>'''    
+    
+    
+
+
+  def style_sheet(self,cssfile='reportstyle.css'):
+
+
     f = open('Report/css/' + cssfile,'w')
-    f.write(stylesheet)
+    f.write(self.stylesheet)
     f.close()
    
     
@@ -357,10 +368,15 @@ p.big
     html += '</tr>\n'
     return html
 
-  def tr_list(self,row,bgcolor=''):
-    html = '      <tr bgcolor=' + bgcolor + '>'
+  def tr_list(self,row,attr=False):
+    
+
+    html = '      <tr>'
     for cell in row:
-      html += '<td>' + str(cell) + '</td>'
+      if attr:
+        html += '<td ' + attr + '>' + str(cell) + '</td>'
+      else:
+        html += '<td>' + str(cell) + '</td>'
     html += '</tr>\n'
     return html   
  
@@ -369,7 +385,9 @@ p.big
     html =   '<!DOCTYPE html>\n'
     html +=  '  <head><title>' + title + '</title>\n'
     html +=  '  <meta charset="UTF-8">\n'
+    html +=  '  <link href="../css/reportstyle.css" rel="stylesheet" />\n'
     html +=  '  <link href="css/reportstyle.css" rel="stylesheet" />\n'
+    #html +=  self.stylesheet
     html +=  '  </head>\n'
     html +=  '  <body align="' + align + '">\n'
     return  html

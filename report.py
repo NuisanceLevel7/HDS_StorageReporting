@@ -46,10 +46,14 @@ array_pages = list()
 for array in rpt.ArrayList.keys():
   links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame">' + rpt.Array2Name[array] + '</a>'])
   array_pages.append( rpt.Array2Name[array] + '.html')
-content += www.start_table('left',0,"Navigation")
+#content += www.start_table('left',0,"Navigation")
+content = '<p>Navigation:<br>'
+content += '<ul>'
 for l in sorted(links, reverse=True):
-  content += www.tr_list(l)
-content += www.end_table  
+  #content += www.tr_list(l)
+  content += '<li>' + l[0] + '</li>'
+content += '</ul>\n</p>'  
+#content += www.end_table  
 content += '</div>\n' 
 
 sorted_pages = sorted(array_pages, reverse=True)
@@ -82,7 +86,7 @@ for sorted_array in sorted_arrays:
 
   htmllist.append('<p class="small">\n')
 
-  htmllist.append('<a name="' + rpt.Array2Name[array] + '">' + rpt.Array2Name[array] + '</a><br>\n')
+  htmllist.append('<a name="' + rpt.Array2Name[array] + '"><h1>' + rpt.Array2Name[array] + '</h1></a><br>\n')
   htmllist.append('<a href="../CSV/' + rpt.Array2Name[array] + '.csv">( Open CSV File )</a><br>') 
   htmllist.append('</p>\n')
   htmllist.append(www.start_table('left',1))
@@ -112,11 +116,21 @@ for sorted_array in sorted_arrays:
   htmllist.append(www.start_table('left',1))
   htmllist.append(www.th_list(rpt.PoolColumnHeader.split(',')))
   for pool in rpt.PoolList:
-    pool_csv =  ",".join(pool)
+    
     usage = pool[4]
     subscription = pool[7]
+    subscription_available = "{:,}".format(float(pool[2]) - float(pool[6]))
+    pool.insert(7,subscription_available)
+    pool_csv =  ",".join(pool)
+    for element in [2,3,6]:
+      val = "{:,}".format(float(pool[element]))
+      if val[-2:] == '.0':
+        val = val[:-2]
+      pool[element] = val
     pool[4] = '<meter min="0"  max="100"  value="' + usage + '">' + usage + '</meter> ' + usage + '%' 
-    pool[7] = '<meter min="0"  max="100"  value="' + subscription + '">' + subscription + '</meter> ' + subscription + '%' 
+    pool[8] = '<meter min="0"  max="100"  value="' + subscription + '">' + subscription + '</meter> ' + subscription + '%' 
+    
+    
     htmllist.append(www.tr_list(pool))
     csvlist.append( pool_csv)
   csvlist.append( "\n")
@@ -129,6 +143,9 @@ for sorted_array in sorted_arrays:
   csvlist.append( rpt.LunColumnHeader)
   for lun in rpt.LunList:
     lun_csv =  ",".join(lun)
+    for element in [1,2]:
+      val = "{:,}".format(float(lun[element]))
+      lun[element] = val    
     htmllist.append(www.tr_list(lun))
     csvlist.append( lun_csv  )  
   csvlist.append( "\n")
