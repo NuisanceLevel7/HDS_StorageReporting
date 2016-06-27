@@ -44,16 +44,14 @@ content = '<div class="nav_content">\n'
 links = list()
 array_pages = list()
 for array in rpt.ArrayList.keys():
-  links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame">' + rpt.Array2Name[array] + '</a>'])
+  links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame"><h3>' + rpt.Array2Name[array] + '</h3></a>'])
   array_pages.append( rpt.Array2Name[array] + '.html')
 #content += www.start_table('left',0,"Navigation")
-content = '<p>Navigation:<br>'
+content = '<p>Navigation:<br>\n'
 content += '<ul>'
 for l in sorted(links, reverse=True):
-  #content += www.tr_list(l)
-  content += '<li>' + l[0] + '</li>'
-content += '</ul>\n</p>'  
-#content += www.end_table  
+  content += '<li>' + l[0] + '</li>\n'
+content += '</ul>\n</p>\n'  
 content += '</div>\n' 
 
 sorted_pages = sorted(array_pages, reverse=True)
@@ -73,6 +71,9 @@ f.write_file(htmlfile,htmllist)
 # sorting the SN to Name dict() by value to display in sorted order...
 sorted_arrays = sorted(rpt.Array2Name.items(), key=operator.itemgetter(1), reverse=True)
 
+csvsummarylist = list()
+csvsummaryfile = 'Report/CSV/ArraySummary.csv'
+csvsummarylist.append( rpt.ArrayColumnHeader)
 
 for sorted_array in sorted_arrays:
 
@@ -106,8 +107,14 @@ for sorted_array in sorted_arrays:
   
   # 
   csvlist.append( rpt.Array2Name[array])
+  
   csvlist.append( rpt.ArrayColumnHeader)
   csvlist.append( rpt.ArrayData[array])
+
+  csvsummarylist.append( rpt.ArrayColumnHeader)
+  csvsummarylist.append( rpt.ArrayData[array])
+
+
   csvlist.append( "\n")
   
   csvlist.append( rpt.PoolColumnHeader)
@@ -158,6 +165,7 @@ for sorted_array in sorted_arrays:
   htmllist.append(html)
 
   f.write_file(htmlfile,htmllist)
+f.write_file(csvsummaryfile,csvsummarylist)  
 sys.exit()
 
 

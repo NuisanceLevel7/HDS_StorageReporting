@@ -30,7 +30,8 @@ class SQLTools:
       serialNum  TEXT NOT NULL PRIMARY KEY UNIQUE,
       name    TEXT UNIQUE,
       description    TEXT UNIQUE,
-      lastRefresh  TEXT
+      lastRefresh  TEXT,
+      codeversion  TEXT
     );
 
     CREATE TABLE Array2Names (
@@ -109,7 +110,7 @@ class ReportGen:
     self.Array2Name = dict()
     self.ArrayList = dict()
     self.ArrayData = dict()
-    self.ArrayColumnHeader = 'Name,Ser#,HCS Name,Description,Last Refreshed'
+    self.ArrayColumnHeader = 'Name,Ser#,HCS Name,Description,Last Refreshed,Code Version'
     self.PoolColumnHeader = 'Pool ID,Name,Capacity GB,Free GB, UsageRate,V-Vols, Subscribed GB,Unsubscribed (GB),Subscription%'
     self.LunColumnHeader = 'LUN ID,Consumed (GB),Capacity GB,Label,Host,Pool ID,Array SN'
     self.PoolList = list()
@@ -150,12 +151,13 @@ class ReportGen:
       
       array_desc = str(row[2])
       array_refresh = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(row[3])))
+      codeversion = str(row[4])
       cur.execute('''SELECT name FROM Array2Names WHERE ArraySerialNum=?''',(array_sn,))
-      output = list()
-      output.append('Name,Ser#,HCS Name,Description,Last Refreshed\n')  
+      #output = list()
+      #output.append('Name,Ser#,HCS Name,Description,Last Refreshed\n')  
       for row in cur:
         alt_name = str(row[0])
-      self.ArrayList[array_sn] =  [alt_name,array_sn,array_name,array_desc,array_refresh]
+      self.ArrayList[array_sn] =  [alt_name,array_sn,array_name,array_desc,array_refresh,codeversion]
       csv = ",".join(self.ArrayList[array_sn])
       self.ArrayData[array_sn] = csv
       self.Array2Name[array_sn] = alt_name
@@ -345,9 +347,24 @@ h1 {
   color: blue;
 }
 
+h3 
+   { 
+     color: blue; 
+     background-color: ; 
+     margin-top: 1px;
+     margin-bottom: 1px;
+   }
+h3:hover 
+   { 
+     color: white; 
+     background-color: blue; 
+     transition: all 250ms ease-in-out; 
+   }    
+
 </style>'''    
     
     
+
 
 
   def style_sheet(self,cssfile='reportstyle.css'):

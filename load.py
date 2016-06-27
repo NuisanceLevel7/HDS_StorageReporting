@@ -32,9 +32,10 @@ def loadArrays():
       name = node.attrib['name'].upper()
       description = node.attrib['description']
       lastRefresh = node.attrib['lastRefreshed']
+      codeversion = node.attrib['controllerVersion']
 
-    cur.execute('''INSERT OR IGNORE INTO Arrays (serialNum, name, description, lastRefresh)
-        VALUES ( ?,?,?,? )''', ( serialNum, name, description, lastRefresh ) )
+    cur.execute('''INSERT OR IGNORE INTO Arrays (serialNum, name, description, lastRefresh, codeversion)
+        VALUES ( ?,?,?,?,? )''', ( serialNum, name, description, lastRefresh, codeversion ) )
 
   conn.commit()
 
