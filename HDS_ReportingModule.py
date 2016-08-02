@@ -351,10 +351,24 @@ h3
    { 
      color: blue; 
      background-color: ; 
-     margin-top: 1px;
-     margin-bottom: 1px;
+     margin-top: 0px;
+     margin-bottom: 0px;
    }
 h3:hover 
+   { 
+     color: white; 
+     background-color: blue; 
+     transition: all 250ms ease-in-out; 
+   }    
+
+h4 
+   { 
+     color: blue; 
+     background-color: ; 
+     margin-top: 0px;
+     margin-bottom: 0px;
+   }
+h4:hover 
    { 
      color: white; 
      background-color: blue; 
@@ -399,7 +413,7 @@ h3:hover
  
  
   def start_html(self,title='Web Report Page',align='center'): 
-    html =   '<!DOCTYPE html>\n'
+    html =   '<!DOCTYPE html>\n<html>\n'
     html +=  '  <head><title>' + title + '</title>\n'
     html +=  '  <meta charset="UTF-8">\n'
     html +=  '  <link href="../css/reportstyle.css" rel="stylesheet" />\n'

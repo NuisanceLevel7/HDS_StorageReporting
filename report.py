@@ -44,7 +44,7 @@ content = '<div class="nav_content">\n'
 links = list()
 array_pages = list()
 for array in rpt.ArrayList.keys():
-  links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame"><h3>' + rpt.Array2Name[array] + '</h3></a>'])
+  links.append(['<a href="html/' + rpt.Array2Name[array] + '.html" target="array_frame"><h4>' + rpt.Array2Name[array] + '</h4></a>'])
   array_pages.append( rpt.Array2Name[array] + '.html')
 #content += www.start_table('left',0,"Navigation")
 content = '<p>Navigation:<br>\n'
@@ -61,9 +61,11 @@ htmllist.append(www.nav(content))
 
 htmllist.append('<div id="section">\n')
 htmllist.append('<div id="section_content">\n')
-frame = '<iframe src="html/' + sorted_pages[0] + '" name="array_frame" width="95%"'
-frame += ' height="600">No Frame Support. Use another browser...</iframe>'
+frame = '<iframe src="html/' + sorted_pages[0] + '" name="array_frame" width="95%"\n'
+frame += ' height="600">No Frame Support. Use another browser...</iframe>\n'
 htmllist.append(frame)
+html = '</div>\n</div>\n'
+htmllist.append(html)
 html = www.end_html
 htmllist.append(html)
 
